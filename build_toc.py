@@ -18,18 +18,14 @@ def _anchor(name):
 
 
 def _parse_header(header):
-    r = re.match(_HEADER_REGEX, header)
-    if r:
-        level = len(r.group(1))
-        name = r.group(2)
+    if r := re.match(_HEADER_REGEX, header):
+        level = len(r[1])
+        name = r[2]
         return level, _anchor(name), name
 
 
 def _iter_headers(md):
-    headers = (line for line in md.splitlines()
-               if line.startswith('#'))
-    for header in headers:
-        yield header
+    yield from (line for line in md.splitlines() if line.startswith('#'))
 
 
 def _get_header_item(header):
@@ -40,8 +36,7 @@ def _get_header_item(header):
 
 def _gen_items(md):
     for header in _iter_headers(md):
-        item = _get_header_item(header)
-        yield item
+        yield _get_header_item(header)
 
 
 def _read_md(filename):
